@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  
+  
+  <title>harness_eng 비교 평가 지시문 분석 | 공개용 리서치 리포트</title>
+  
+  
+  
+  
+  
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --paper: #fffdf8;
+      --ink: #1f2528;
+      --muted: #667072;
+      --line: #ddd7ca;
+      --accent: #136f63;
+      --accent-soft: #dceee9;
+      --gold: #b9822d;
+      --rose: #8b3f52;
+      --code: #20292c;
+      --shadow: 0 18px 55px rgba(31, 37, 40, 0.09);
+      --radius: 8px;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(19, 111, 99, 0.12), transparent 34rem),
+        linear-gradient(180deg, #fbfaf6 0%, var(--bg) 48%, #efe9dd 100%);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      line-height: 1.72;
+      word-break: keep-all;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+    }
+
+    .page {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    header.hero {
+      padding: 72px 0 42px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 38px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.35rem, 6vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .dek {
+      max-width: 790px;
+      margin: 24px 0 0;
+      color: #3d474a;
+      font-size: clamp(1.08rem, 2vw, 1.38rem);
+      line-height: 1.65;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .meta-card {
+      min-height: 98px;
+      padding: 16px;
+      background: rgba(255, 253, 248, 0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .meta-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .meta-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    main {
+      padding: 42px 0 72px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 44px;
+      align-items: start;
+    }
+
+    article {
+      min-width: 0;
+    }
+
+    aside {
+      position: sticky;
+      top: 24px;
+    }
+
+    .toc {
+      padding: 20px;
+      background: rgba(255, 253, 248, 0.82);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 26px rgba(31, 37, 40, 0.05);
+    }
+
+    .toc h2 {
+      margin: 0 0 12px;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: block;
+      padding: 8px 0;
+      color: #475155;
+      font-size: 0.94rem;
+      text-decoration: none;
+      border-top: 1px solid rgba(221, 215, 202, 0.7);
+    }
+
+    section {
+      margin-top: 44px;
+      padding-top: 10px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.65rem, 3vw, 2.45rem);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 1.18rem;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 18px;
+      color: #313b3e;
+    }
+
+    .abstract {
+      padding: 30px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .abstract h2 {
+      font-size: 1.45rem;
+    }
+
+    .pullquote {
+      margin: 34px 0;
+      padding: 26px 30px;
+      color: #162526;
+      background: linear-gradient(90deg, var(--accent-soft), rgba(255, 253, 248, 0.85));
+      border-left: 5px solid var(--accent);
+      border-radius: var(--radius);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.26rem, 2.4vw, 1.72rem);
+      line-height: 1.48;
+    }
+
+    .findings {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .finding {
+      padding: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .finding b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .score-table {
+      width: 100%;
+      margin: 22px 0;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .score-table th,
+    .score-table td {
+      padding: 14px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .score-table th {
+      color: #233033;
+      background: #eee8dc;
+      font-size: 0.88rem;
+    }
+
+    .score-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .weight {
+      display: inline-block;
+      min-width: 52px;
+      padding: 3px 8px;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .evidence-card {
+      padding: 22px;
+      background: rgba(255, 253, 248, 0.9);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .evidence-card h3 {
+      margin-top: 0;
+    }
+
+    ul,
+    ol {
+      margin: 12px 0 20px;
+      padding-left: 1.35rem;
+    }
+
+    li {
+      margin: 8px 0;
+      color: #313b3e;
+    }
+
+    .diagram {
+      margin: 26px 0;
+      padding: 24px;
+      background: #fdfbf6;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .flow-step {
+      padding: 18px 14px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .arrow {
+      color: var(--gold);
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .code-block {
+      margin: 20px 0;
+      padding: 22px;
+      color: #ecf1ef;
+      background: var(--code);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      font-family: "D2Coding", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.72;
+      white-space: pre-wrap;
+    }
+
+    .note {
+      padding: 18px 20px;
+      background: #fff8e8;
+      border: 1px solid #ead6a8;
+      border-radius: var(--radius);
+    }
+
+    .share-frame {
+      margin-top: 34px;
+      padding: 24px;
+      background: #173735;
+      color: #f6f4ef;
+      border-radius: var(--radius);
+    }
+
+    .share-frame h2 {
+      color: #fff;
+      font-size: 1.55rem;
+    }
+
+    .share-frame p {
+      color: #dceee9;
+    }
+
+    .copybox {
+      margin-top: 14px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      font-size: 0.96rem;
+    }
+
+    footer {
+      padding: 34px 0 52px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+      }
+
+      .meta-grid,
+      .findings,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 24px, var(--max));
+      }
+
+      header.hero {
+        padding-top: 48px;
+      }
+
+      .abstract,
+      .diagram,
+      .share-frame {
+        padding: 20px;
+      }
+
+      .score-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+<meta property="og:type" content="article">
+<meta property="og:title" content="jaypakdevkr/harness_eng">
+<meta property="og:description" content="harness\eng CLAUDE.md를 먼저 읽고 평가 원칙을 따르라. harnessengwith 와 harnessengwithout 두 폴더를 비교 평가하라. 평가 기준: 1. 기능 완성도 (20점) 2. 데이터 품질 및 정규화 품질 (20점) 3. UI/UX 사용성 (15점) 4. 코드 구조와 유지보수성 (15점) ">
+<meta property="og:url" content="https://jiwoosoft.github.io/marktl-pages/marktl/s/h4dqi9/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jaypakdevkr/harness_eng">
+<meta name="twitter:description" content="harness\eng CLAUDE.md를 먼저 읽고 평가 원칙을 따르라. harnessengwith 와 harnessengwithout 두 폴더를 비교 평가하라. 평가 기준: 1. 기능 완성도 (20점) 2. 데이터 품질 및 정규화 품질 (20점) 3. UI/UX 사용성 (15점) 4. 코드 구조와 유지보수성 (15점) ">
+<link rel="canonical" href="https://jiwoosoft.github.io/marktl-pages/marktl/s/h4dqi9/">
+</head>
+<body>
+  <header class="hero">
+    <div class="page">
+      <div class="kicker">Research Report · Editorial Brief</div>
+      <h1>harness_eng 비교 평가를 위한 공개용 리서치 리포트</h1>
+      <p class="dek">
+        이 문서는 GitHub 저장소 <strong>jaypakdevkr/harness_eng</strong>의 두 구현 폴더를 비교 평가하기 위한 원문 지시를
+        독자가 바로 이해하고 실행할 수 있는 공개용 연구 보고서 형식으로 재구성한 것이다.
+      </p>
+
+      <div class="meta-grid" aria-label="문서 메타데이터">
+        <div class="meta-card">
+          <span>Source</span>
+          <strong><a>GitHub Repository</a></strong>
+        </div>
+        <div class="meta-card">
+          <span>Created</span>
+          <strong>2026년 4월 28일</strong>
+        </div>
+        <div class="meta-card">
+          <span>Artifact Type</span>
+          <strong>Research Report</strong>
+        </div>
+        <div class="meta-card">
+          <span>Mode</span>
+          <strong>Editorial Blog</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="layout">
+      <article>
+        <section id="abstract" class="abstract">
+          <h2>초록</h2>
+          <p>
+            원문 노트는 <code>harness_eng_with</code>와 <code>harness_eng_without</code> 두 폴더를 비교 평가하고,
+            결과를 <code>comparison_report.md</code>로 작성하라는 실행 지시다. 핵심은 단순 감상이 아니라 파일 근거,
+            실제 검증 결과, 치명적 결함, 최종 판정을 포함한 평가 보고서를 만드는 데 있다.
+          </p>
+          <p>
+            평가 프레임은 기능 완성도부터 릴리즈 준비도까지 총 100점으로 구성되어 있으며, 구현물의 제품성,
+            데이터 신뢰도, 코드 지속 가능성, 검증 가능성을 균형 있게 판단하도록 설계되어 있다.
+          </p>
+        </section>
+
+        <section id="key-findings">
+          <h2>핵심 요약</h2>
+          <div class="findings">
+            <div class="finding">
+              <b>Finding 01</b>
+              두 폴더는 동일한 기준표로 점수화되어야 하며, 각 항목은 반드시 파일 단위 근거를 요구한다.
+            </div>
+            <div class="finding">
+              <b>Finding 02</b>
+              build, test, validation script 실행 여부가 평가 신뢰도를 좌우하는 핵심 증거로 지정되어 있다.
+            </div>
+            <div class="finding">
+              <b>Finding 03</b>
+              최종 산출물은 단순 비교표가 아니라 치명적 결함과 추가 검증 권장 사항까지 포함한 의사결정 문서다.
+            </div>
+          </div>
+
+          <div class="pullquote">
+            “좋은 비교 평가는 어느 쪽이 더 나은지 말하는 데서 끝나지 않는다. 왜 그런지, 어떤 파일이 그 판단을 뒷받침하는지까지 보여준다.”
+          </div>
+        </section>
+
+        <section id="evaluation-frame">
+          <h2>평가 프레임</h2>
+          <p>
+            원문은 총 7개 항목, 100점 만점의 평가 체계를 제시한다. 이 체계는 기능, 데이터, 사용자 경험,
+            코드 품질, 검증, 문서화, 릴리즈 준비도를 함께 본다는 점에서 실무형 리뷰에 가깝다.
+          </p>
+
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>평가 항목</th>
+                <th>배점</th>
+                <th>판단 초점</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>기능 완성도</td>
+                <td><span class="weight">20점</span></td>
+                <td>요구 기능이 실제로 구현되어 있고 실행 가능한지 평가한다.</td>
+              </tr>
+              <tr>
+                <td>데이터 품질 및 정규화 품질</td>
+                <td><span class="weight">20점</span></td>
+                <td>데이터 구조, 중복 제거, 정규화, 품질 관리 방식이 충분한지 확인한다.</td>
+              </tr>
+              <tr>
+                <td>UI/UX 사용성</td>
+                <td><span class="weight">15점</span></td>
+                <td>사용 흐름, 화면 구조, 입력과 출력의 명료성, 오류 경험을 살핀다.</td>
+              </tr>
+              <tr>
+                <td>코드 구조와 유지보수성</td>
+                <td><span class="weight">15점</span></td>
+                <td>모듈 경계, 중복, 의존성, 변경 용이성을 기준으로 본다.</td>
+              </tr>
+              <tr>
+                <td>검증 체계</td>
+                <td><span class="weight">15점</span></td>
+                <td>build, test, validation script가 존재하고 실제로 작동하는지 평가한다.</td>
+              </tr>
+              <tr>
+                <td>문서화</td>
+                <td><span class="weight">10점</span></td>
+                <td>README, 실행법, 갱신법, 운영 절차가 재현 가능하게 정리되어 있는지 본다.</td>
+              </tr>
+              <tr>
+                <td>릴리즈 준비도</td>
+                <td><span class="weight">5점</span></td>
+                <td>배포 전 점검, 설정, 산출물 정리, 사용 가능 상태를 확인한다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="method">
+          <h2>권장 평가 방법</h2>
+          <p>
+            비교 대상이 되는 두 폴더는 <code>harness_eng_with</code>와 <code>harness_eng_without</code>이다.
+            평가자는 먼저 저장소의 <code>CLAUDE.md</code>를 읽고, 그 안에 정의된 평가 원칙을 우선 적용해야 한다.
+          </p>
+
+          <div class="diagram" aria-label="평가 절차 다이어그램">
+            <div class="flow">
+              <div class="flow-step">CLAUDE.md 확인</div>
+              <div class="arrow">→</div>
+              <div class="flow-step">두 폴더 파일 근거 수집</div>
+              <div class="arrow">→</div>
+              <div class="flow-step">점수화 및 최종 판정</div>
+            </div>
+          </div>
+
+          <div class="evidence-grid">
+            <div class="evidence-card">
+              <h3>증거 기반 점수화</h3>
+              <p>
+                각 점수는 추정이 아니라 파일 경로, 구현 내용, 문서, 스크립트 실행 결과로 설명되어야 한다.
+                “좋아 보인다”보다 “어떤 파일의 어떤 구조 때문에 점수를 부여했다”가 중요하다.
+              </p>
+            </div>
+            <div class="evidence-card">
+              <h3>실행 결과 반영</h3>
+              <p>
+                가능하면 실제 build, test, validation을 실행하고 결과를 반영한다.
+                실행하지 못한 경우에도 그 이유와 남는 리스크를 명시해야 한다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="original-instruction">
+          <h2>원문 지시의 구조</h2>
+          <p>
+            아래는 원문 노트에 포함된 핵심 지시를 보고서 작성 기준으로 재배열한 것이다.
+          </p>
+
+          <div class="code-block">CLAUDE.md를 먼저 읽고 평가 원칙을 따르라.
+
+harness_eng_with 와 harness_eng_without 두 폴더를 비교 평가하라.
+
+평가 기준:
+1. 기능 완성도 (20점)
+2. 데이터 품질 및 정규화 품질 (20점)
+3. UI/UX 사용성 (15점)
+4. 코드 구조와 유지보수성 (15점)
+5. 검증 체계(build/test/validation script) (15점)
+6. 문서화(README, 실행법, 갱신법) (10점)
+7. 릴리즈 준비도 (5점)</div>
+
+          <div class="code-block">출력 형식:
+1. 총점 비교표
+2. 항목별 비교
+3. 치명적 결함 목록
+4. 최종 판정
+5. 추가 검증 권장 사항
+
+최종 결과를 comparison_report.md 파일로 작성하라.</div>
+        </section>
+
+        <section id="report-template">
+          <h2>보고서 산출물의 권장 구성</h2>
+          <p>
+            최종 보고서인 <code>comparison_report.md</code>는 평가자가 바로 의사결정에 사용할 수 있도록
+            다음 순서를 따르는 것이 적합하다.
+          </p>
+
+          <ol>
+            <li><strong>총점 비교표.</strong> 두 폴더의 총점과 항목별 점수를 한눈에 비교한다.</li>
+            <li><strong>항목별 비교.</strong> 각 항목마다 점수 이유와 파일 근거를 병기한다.</li>
+            <li><strong>치명적 결함 목록.</strong> 실행 불가, 데이터 손상, 검증 부재 같은 중대 리스크를 별도로 표시한다.</li>
+            <li><strong>최종 판정.</strong> 어느 구현이 더 우수한지 명확히 결론 내린다.</li>
+            <li><strong>추가 검증 권장 사항.</strong> 남은 불확실성과 다음 확인 작업을 제안한다.</li>
+          </ol>
+
+          <div class="note">
+            공개용 리포트에서는 “승자”만 강조하기보다, 어떤 조건에서 그 결론이 성립하는지 함께 적는 편이 독자에게 더 유용하다.
+          </div>
+        </section>
+
+        <section id="implications">
+          <h2>시사점</h2>
+          <p>
+            이 평가 지시문은 코드 리뷰와 제품 평가의 경계에 있다. 단순히 소스가 존재하는지 확인하는 데서 멈추지 않고,
+            데이터 품질, 사용자 경험, 검증 체계, 문서화까지 함께 판단하므로 실제 인수 검토나 릴리즈 판단에 사용할 수 있다.
+          </p>
+          <p>
+            특히 “파일 근거”와 “실제 실행 결과”를 요구한다는 점이 중요하다. 이는 평가자의 주관을 줄이고,
+            다음 작업자가 같은 저장소를 열었을 때 판단을 재현할 수 있게 만든다.
+          </p>
+        </section>
+
+        <section id="source-notes">
+          <h2>소스 노트</h2>
+          <ul>
+            <li>원천 문서: Obsidian Markdown note.</li>
+            <li>저장소 출처: <a>https://github.com/jaypakdevkr/harness_eng</a>.</li>
+            <li>원문 생성일: 2026년 4월 28일.</li>
+            <li>원문 설명: “Contribute to jaypakdevkr/harness_eng development by creating an account on GitHub.”</li>
+            <li>태그: clippings.</li>
+          </ul>
+        </section>
+
+        <section id="ending" class="share-frame">
+          <h2>공유용 요약</h2>
+          <p>
+            harness_eng 비교 평가는 두 구현 폴더를 100점 기준으로 검토하되, 모든 점수에 파일 근거와 실행 검증 결과를 요구한다.
+            핵심 질문은 단순하다. 어느 쪽이 더 완성도 높고, 더 검증 가능하며, 실제 릴리즈에 가까운가.
+          </p>
+          <div class="copybox">
+            공유 문구: “harness_eng의 두 구현을 기능, 데이터 품질, UI/UX, 유지보수성, 검증 체계, 문서화, 릴리즈 준비도 기준으로 비교 평가하는 리서치 리포트.”
+          </div>
+        </section>
+      </article>
+
+      <aside aria-label="문서 목차">
+        <nav class="toc">
+          <h2>Contents</h2>
+          <a href="#abstract">초록</a>
+          <a href="#key-findings">핵심 요약</a>
+          <a href="#evaluation-frame">평가 프레임</a>
+          <a href="#method">권장 평가 방법</a>
+          <a href="#original-instruction">원문 지시</a>
+          <a href="#report-template">보고서 구성</a>
+          <a href="#implications">시사점</a>
+          <a href="#source-notes">소스 노트</a>
+        </nav>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="page">
+      <p>
+        이 HTML 문서는 제공된 Obsidian Markdown 노트를 바탕으로 작성된 독립 실행형 공개용 리서치 리포트입니다.
+        외부 스크립트, 원격 에셋, iframe을 사용하지 않았습니다.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
