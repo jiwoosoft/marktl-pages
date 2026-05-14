@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  
+  
+  <title>설치된 프로그램을 다른 드라이브로 옮기는 법 | 재설치 없이 C드라이브 용량 확보하기</title>
+  
+  
+  
+  
+  
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf8;
+      --ink: #1f2528;
+      --muted: #687277;
+      --line: #ded8cb;
+      --accent: #0c6b5f;
+      --accent-2: #bf5b2c;
+      --soft: #e8f1ee;
+      --soft-2: #f3e7dd;
+      --code: #263238;
+      --shadow: 0 22px 60px rgba(31, 37, 40, .10);
+      --radius: 8px;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(12, 107, 95, .08), transparent 420px),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+      line-height: 1.72;
+      letter-spacing: 0;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    .page {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 28px 22px 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, .72fr);
+      gap: 34px;
+      align-items: end;
+      padding: 54px 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: .86rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 840px;
+      font-family: Georgia, "Times New Roman", "Noto Serif KR", serif;
+      font-size: clamp(2.35rem, 5.4vw, 5.4rem);
+      line-height: 1.03;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .excerpt {
+      margin: 24px 0 0;
+      max-width: 720px;
+      color: #3e474b;
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+      line-height: 1.75;
+    }
+
+    .meta-panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .meta-panel dl {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 10px 14px;
+      margin: 0;
+      font-size: .94rem;
+    }
+
+    .meta-panel dt {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .meta-panel dd {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .share-box {
+      margin-top: 18px;
+      padding: 16px;
+      background: var(--soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      font-size: .94rem;
+    }
+
+    .share-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 42px;
+      align-items: start;
+      margin-top: 36px;
+    }
+
+    nav.toc {
+      position: sticky;
+      top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, .82);
+      backdrop-filter: blur(8px);
+    }
+
+    nav.toc h2 {
+      margin: 0 0 12px;
+      font-size: .9rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    nav.toc ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    nav.toc li {
+      margin: 9px 0;
+      line-height: 1.45;
+      font-size: .94rem;
+    }
+
+    article {
+      min-width: 0;
+    }
+
+    .abstract,
+    .finding-grid,
+    .evidence,
+    .note,
+    .ending {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px rgba(31, 37, 40, .06);
+    }
+
+    .abstract {
+      padding: 28px;
+      margin-bottom: 30px;
+    }
+
+    .label {
+      margin: 0 0 10px;
+      color: var(--accent-2);
+      font-size: .82rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .abstract p {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    h2 {
+      margin: 58px 0 18px;
+      font-family: Georgia, "Times New Roman", "Noto Serif KR", serif;
+      font-size: clamp(1.75rem, 3.3vw, 2.55rem);
+      line-height: 1.18;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    h3 {
+      margin: 34px 0 12px;
+      font-size: 1.26rem;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 18px;
+    }
+
+    .lead {
+      font-size: 1.12rem;
+      color: #394348;
+    }
+
+    .finding-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      margin: 24px 0 38px;
+      background: var(--line);
+    }
+
+    .finding {
+      padding: 22px;
+      background: var(--paper);
+    }
+
+    .finding strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--accent);
+      font-size: 1.02rem;
+    }
+
+    .finding p {
+      margin: 0;
+      color: #465156;
+      font-size: .96rem;
+    }
+
+    blockquote {
+      margin: 34px 0;
+      padding: 26px 30px;
+      border-left: 6px solid var(--accent-2);
+      background: var(--soft-2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-family: Georgia, "Times New Roman", "Noto Serif KR", serif;
+      font-size: clamp(1.25rem, 2.5vw, 1.72rem);
+      line-height: 1.48;
+      color: #2b3032;
+    }
+
+    .diagram {
+      margin: 30px 0;
+      padding: 24px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .diagram-title {
+      margin: 0 0 18px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .node {
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      text-align: center;
+      background: var(--soft);
+      border: 1px solid #c9ded8;
+      border-radius: var(--radius);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .node.alt {
+      background: var(--soft-2);
+      border-color: #ead0bd;
+    }
+
+    .arrow {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 1.35rem;
+    }
+
+    .evidence {
+      padding: 24px;
+      margin: 26px 0;
+    }
+
+    .evidence h3 {
+      margin-top: 0;
+    }
+
+    ul,
+    ol {
+      padding-left: 24px;
+      margin: 0 0 22px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    .steps {
+      counter-reset: step;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 16px 16px 16px 58px;
+      margin: 12px 0;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 17px;
+      top: 17px;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 26px 0;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: table;
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef3f1;
+      color: #243033;
+      font-size: .94rem;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code,
+    .copy {
+      font-family: "Cascadia Mono", "Consolas", monospace;
+    }
+
+    code {
+      background: #eef0ed;
+      color: var(--code);
+      padding: .12em .34em;
+      border-radius: 4px;
+      font-size: .92em;
+    }
+
+    .copy {
+      margin: 22px 0;
+      padding: 18px;
+      background: #1f2528;
+      color: #f8f2e8;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .checklist {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 34px;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      color: white;
+      border-radius: 4px;
+      font-size: .8rem;
+      font-weight: 900;
+    }
+
+    .note {
+      padding: 22px;
+      margin: 28px 0;
+      background: #fffaf2;
+    }
+
+    .note strong {
+      color: var(--accent-2);
+    }
+
+    .source-list {
+      font-size: .95rem;
+      color: #485358;
+    }
+
+    .ending {
+      margin-top: 52px;
+      padding: 34px;
+      background:
+        linear-gradient(135deg, rgba(12, 107, 95, .12), rgba(191, 91, 44, .10)),
+        var(--paper);
+    }
+
+    .ending h2 {
+      margin-top: 0;
+    }
+
+    footer {
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      nav.toc {
+        position: static;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+        justify-self: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 20px 16px 54px;
+      }
+
+      .hero {
+        padding-top: 32px;
+      }
+
+      .meta-panel,
+      .abstract,
+      .evidence,
+      .ending,
+      .diagram {
+        padding: 20px;
+      }
+
+      .finding-grid {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      blockquote {
+        padding: 22px;
+      }
+    }
+  </style>
+<meta property="og:type" content="article">
+<meta property="og:title" content="설치된 프로그램 다른 드라이브로 옮기기! 재설치 없이 1분 만에 C드라이브 용량 확보">
+<meta property="og:description" content="이번 포스팅에서는 용량을 확보할 수 있는, 설치된 프로그램 다른 드라이브로 옮기기 에 대해 알아보도록 하겠습니다. 컴퓨터를 사용하다 보면 가장 스트레스 받는 순간 중 하나가 바로 C드라이브 용량 부족 경고가 뜰 때입니다. 윈도우와 각종 필수 프로그램이 기본적으로 설치되는 공간이다 보니, 조금만 관리를 소홀히 해도 금방 용">
+<meta property="og:url" content="https://jiwoosoft.github.io/marktl-pages/marktl/s/1f99x4o/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="설치된 프로그램 다른 드라이브로 옮기기! 재설치 없이 1분 만에 C드라이브 용량 확보">
+<meta name="twitter:description" content="이번 포스팅에서는 용량을 확보할 수 있는, 설치된 프로그램 다른 드라이브로 옮기기 에 대해 알아보도록 하겠습니다. 컴퓨터를 사용하다 보면 가장 스트레스 받는 순간 중 하나가 바로 C드라이브 용량 부족 경고가 뜰 때입니다. 윈도우와 각종 필수 프로그램이 기본적으로 설치되는 공간이다 보니, 조금만 관리를 소홀히 해도 금방 용">
+<link rel="canonical" href="https://jiwoosoft.github.io/marktl-pages/marktl/s/1f99x4o/">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="kicker">Research Report · Windows Storage</p>
+        <h1>설치된 프로그램을 다른 드라이브로 옮기는 법</h1>
+        <p class="excerpt">C드라이브 용량이 부족할 때 프로그램을 지우고 다시 설치하지 않아도 됩니다. FolderMove와 심볼릭 링크를 이용하면 실제 데이터는 다른 드라이브로 옮기고, 윈도우에는 원래 위치에 있는 것처럼 보이게 만들 수 있습니다.</p>
+      </div>
+
+      <aside class="meta-panel" aria-label="문서 정보">
+        <dl>
+          <dt>주제</dt>
+          <dd>설치된 프로그램 이동과 C드라이브 용량 확보</dd>
+          <dt>도구</dt>
+          <dd>FolderMove, Windows 심볼릭 링크</dd>
+          <dt>발행일</dt>
+          <dd>2026년 4월 8일</dd>
+          <dt>형식</dt>
+          <dd>편집형 리서치 리포트</dd>
+        </dl>
+        <div class="share-box">
+          <strong>공유 문구</strong>
+          재설치 없이 C드라이브를 비우는 실전 방법. FolderMove로 프로그램 폴더를 옮기고 심볼릭 링크로 경로 문제를 해결하는 과정을 정리했습니다.
+        </div>
+      </aside>
+    </header>
+
+    <main class="layout">
+      <nav class="toc" aria-label="목차">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#abstract">요약</a></li>
+          <li><a href="#findings">핵심 발견</a></li>
+          <li><a href="#principle">작동 원리</a></li>
+          <li><a href="#move">이동 절차</a></li>
+          <li><a href="#verify">검증 방법</a></li>
+          <li><a href="#restore">원상 복구</a></li>
+          <li><a href="#implications">실무적 시사점</a></li>
+          <li><a href="#sources">출처와 참고</a></li>
+        </ol>
+      </nav>
+
+      <article>
+        <section id="abstract" class="abstract">
+          <p class="label">Abstract</p>
+          <p>이 글은 윈도우 PC에서 C드라이브 용량 부족을 해결하기 위해 설치된 프로그램 폴더를 다른 드라이브로 옮기는 방법을 설명합니다. 핵심은 실제 파일은 D드라이브 같은 보조 저장소로 이동하고, 원래 C드라이브 위치에는 심볼릭 링크를 남겨 윈도우와 프로그램이 기존 경로를 계속 사용하는 것처럼 만드는 방식입니다.</p>
+        </section>
+
+        <section id="findings">
+          <h2>핵심 발견</h2>
+          <div class="finding-grid">
+            <div class="finding">
+              <strong>재설치 없이 이동 가능</strong>
+              <p>프로그램 폴더를 옮긴 뒤 심볼릭 링크를 만들면 레지스트리나 바로가기 경로를 대거 수정하지 않아도 됩니다.</p>
+            </div>
+            <div class="finding">
+              <strong>FolderMove는 절차를 단순화</strong>
+              <p>명령 프롬프트에서 직접 <code>mklink</code>를 입력하지 않고도 폴더 이동과 링크 생성을 한 번에 처리합니다.</p>
+            </div>
+            <div class="finding">
+              <strong>검증이 필수</strong>
+              <p>링크 표시, 대상 경로, 실제 저장 위치, 프로그램 실행 상태를 확인해야 데이터 손상이나 경로 오류를 줄일 수 있습니다.</p>
+            </div>
+            <div class="finding">
+              <strong>복구 절차도 준비해야 함</strong>
+              <p>보조 드라이브 교체, 속도 저하, 오류 발생에 대비해 심볼릭 링크 삭제와 원본 위치 복사 절차를 알아두는 것이 좋습니다.</p>
+            </div>
+          </div>
+
+          <blockquote>
+            “이 방법의 핵심은 파일을 숨기는 것이 아니라, 윈도우가 익숙한 경로를 계속 바라보게 만드는 데 있습니다.”
+          </blockquote>
+        </section>
+
+        <section id="principle">
+          <h2>C드라이브 용량 부족 해결의 핵심</h2>
+          <p class="lead">윈도우와 대부분의 프로그램은 기본 설치 위치로 C드라이브를 사용합니다. 게임, 영상 편집 프로그램, 개발 도구처럼 용량이 큰 소프트웨어를 몇 개만 설치해도 C드라이브의 여유 공간은 빠르게 줄어듭니다.</p>
+          <p>심볼릭 링크는 이 문제를 우회하는 실용적인 장치입니다. 실제 데이터는 용량이 넉넉한 다른 드라이브로 옮기고, 원래 위치에는 “실제 파일은 이쪽에 있다”는 연결 경로를 남깁니다. 운영체제와 프로그램은 기존 C드라이브 경로를 그대로 호출하지만, 파일 접근은 보조 드라이브의 실제 폴더로 이어집니다.</p>
+
+          <div class="diagram" role="img" aria-label="심볼릭 링크 작동 흐름">
+            <p class="diagram-title">심볼릭 링크 기반 이동 구조</p>
+            <div class="flow">
+              <div class="node">원래 위치<br><code>C:\Program Files\App</code></div>
+              <div class="arrow">→</div>
+              <div class="node alt">심볼릭 링크<br>경로 연결</div>
+              <div class="arrow">→</div>
+              <div class="node">실제 데이터<br><code>D:\Backup\App</code></div>
+            </div>
+          </div>
+
+          <h3>프로그램 재설치가 필요 없는 이유</h3>
+          <ul class="checklist">
+            <li>용량을 많이 차지하는 프로그램 폴더를 통째로 보조 드라이브로 이동합니다.</li>
+            <li>원래 설치 경로에는 심볼릭 링크를 생성합니다.</li>
+            <li>윈도우와 프로그램은 기존 C드라이브 경로를 계속 사용하는 것으로 인식합니다.</li>
+            <li>사용자 설정, 실행 경로, 내부 참조를 크게 건드리지 않아 오류 가능성을 줄입니다.</li>
+          </ul>
+
+          <div class="note">
+            <strong>주의할 점.</strong> 모든 프로그램이 폴더 단위 이동에 완벽히 적합한 것은 아닙니다. 드라이버, 보안 프로그램, 백그라운드 서비스가 깊게 연결된 소프트웨어는 이동 전에 백업과 복구 계획을 먼저 세우는 것이 안전합니다.
+          </div>
+        </section>
+
+        <section id="move">
+          <h2>FolderMove로 설치된 프로그램 옮기기</h2>
+          <p>FolderMove는 심볼릭 링크를 직접 만드는 과정을 단순화한 포터블 도구입니다. 사용자는 원본 폴더와 이동할 대상 폴더만 지정하면 됩니다. 이후 도구가 폴더 이동과 심볼릭 링크 생성을 이어서 처리합니다.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>의미</th>
+                <th>확인 포인트</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Move From</code></td>
+                <td>현재 프로그램이 설치된 원본 경로</td>
+                <td>바탕화면 바로가기의 “파일 위치 열기”로 확인합니다.</td>
+              </tr>
+              <tr>
+                <td><code>Move To</code></td>
+                <td>실제 데이터가 옮겨질 새 위치</td>
+                <td>용량이 충분하고 항상 연결되는 드라이브를 선택합니다.</td>
+              </tr>
+              <tr>
+                <td><code>Move and set Symbolic link</code></td>
+                <td>폴더 이동과 링크 생성을 실행하는 버튼</td>
+                <td>두 경로가 정확한지 확인한 뒤 실행합니다.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <section class="evidence">
+            <h3>1단계. FolderMove 다운로드와 실행</h3>
+            <ol class="steps">
+              <li>FolderMove 공식 홈페이지에 접속합니다.</li>
+              <li>무료 다운로드 버튼을 눌러 다운로드 페이지로 이동합니다.</li>
+              <li>공유 사이트에서 무료 다운로드를 선택합니다.</li>
+              <li>보안 확인을 완료한 뒤 다운로드 링크를 생성합니다.</li>
+              <li><code>FolderMove.exe</code> 파일을 내려받고 실행합니다.</li>
+            </ol>
+          </section>
+
+          <section class="evidence">
+            <h3>2단계. 원본 프로그램 경로 확인</h3>
+            <ol class="steps">
+              <li>바탕화면이나 시작 메뉴에서 옮길 프로그램의 바로가기를 찾습니다.</li>
+              <li>아이콘을 마우스 오른쪽 버튼으로 클릭하고 “파일 위치 열기”를 선택합니다.</li>
+              <li>파일 탐색기 주소 표시줄을 클릭해 전체 경로를 선택합니다.</li>
+              <li><code>Ctrl + C</code>로 원본 폴더 경로를 복사합니다.</li>
+            </ol>
+          </section>
+
+          <section class="evidence">
+            <h3>3단계. 새 저장 위치 지정과 링크 생성</h3>
+            <ol class="steps">
+              <li>FolderMove의 <code>Move From</code> 칸에 복사한 원본 경로를 붙여넣습니다.</li>
+              <li><code>Move To</code> 옆의 <code>Browse</code> 버튼을 눌러 보조 드라이브의 대상 폴더를 선택합니다.</li>
+              <li>원본 경로와 대상 경로가 정확한지 다시 확인합니다.</li>
+              <li><code>Move and set Symbolic link</code> 버튼을 눌러 이동을 시작합니다.</li>
+              <li>완료 메시지가 나타나면 작업을 종료합니다.</li>
+            </ol>
+          </section>
+
+          <div class="copy">예시 경로
+원본 위치: C:\Program Files\OBS Studio
+이동 위치: D:\Programs\OBS Studio
+결과: C드라이브에는 링크가 남고, 실제 파일은 D드라이브에 저장됩니다.</div>
+        </section>
+
+        <section id="verify">
+          <h2>이동 결과 검증과 실행 테스트</h2>
+          <p>폴더 이동이 끝났다면 용량이 늘어난 것만 보고 끝내면 안 됩니다. 심볼릭 링크가 제대로 만들어졌는지, 실제 데이터가 보조 드라이브에 있는지, 프로그램이 이전과 동일하게 실행되는지 확인해야 합니다.</p>
+
+          <h3>검증 체크리스트</h3>
+          <ul class="checklist">
+            <li>원래 C드라이브 위치의 폴더 아이콘에 바로가기 또는 링크 표시가 있는지 확인합니다.</li>
+            <li>속성 화면에서 대상 경로가 새 저장 위치를 가리키는지 확인합니다.</li>
+            <li>D드라이브 같은 대상 위치에 실제 파일이 온전히 옮겨졌는지 확인합니다.</li>
+            <li>내 PC에서 C드라이브 여유 공간이 늘어났는지 확인합니다.</li>
+            <li>기존 바로가기나 시작 메뉴 아이콘으로 프로그램을 실행합니다.</li>
+            <li>사용자 설정, 프로필, 플러그인, 작업 내역이 유지되는지 확인합니다.</li>
+            <li>실행 중 “파일을 찾을 수 없습니다” 같은 경로 오류가 없는지 살펴봅니다.</li>
+          </ul>
+
+          <table>
+            <thead>
+              <tr>
+                <th>증상</th>
+                <th>가능한 원인</th>
+                <th>확인 방법</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>프로그램이 실행되지 않음</td>
+                <td>링크 경로 오류 또는 이동 중 파일 누락</td>
+                <td>원본 링크 대상과 실제 폴더 내부 파일을 대조합니다.</td>
+              </tr>
+              <tr>
+                <td>설정이 초기화됨</td>
+                <td>사용자 데이터가 별도 위치에 있거나 일부 폴더만 이동됨</td>
+                <td><code>AppData</code>와 프로그램 설정 저장 위치를 확인합니다.</td>
+              </tr>
+              <tr>
+                <td>실행 속도가 느려짐</td>
+                <td>보조 드라이브 속도 부족</td>
+                <td>HDD, 외장 드라이브, 네트워크 드라이브 사용 여부를 점검합니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="restore">
+          <h2>예기치 못한 상황을 위한 원상 복구</h2>
+          <p>보조 드라이브가 느리거나, 드라이브를 교체해야 하거나, 특정 프로그램이 링크 구조와 잘 맞지 않는다면 원래 상태로 되돌릴 수 있어야 합니다. 심볼릭 링크는 실제 데이터가 아니라 연결 통로이므로, 순서를 지키면 복구는 비교적 단순합니다.</p>
+
+          <section class="evidence">
+            <h3>복구 절차</h3>
+            <ol class="steps">
+              <li>관련 프로그램을 완전히 종료합니다.</li>
+              <li>C드라이브의 원래 위치에 있는 심볼릭 링크 폴더를 삭제합니다.</li>
+              <li>보조 드라이브에 있는 실제 데이터 폴더를 복사합니다.</li>
+              <li>원래 C드라이브 경로에 붙여넣습니다.</li>
+              <li>실행 파일이 원래 위치에 존재하는지 확인합니다.</li>
+              <li>바탕화면 바로가기나 시작 메뉴에서 프로그램을 실행합니다.</li>
+              <li>설정과 작업 내역이 유지되는지 확인한 뒤 재부팅합니다.</li>
+            </ol>
+          </section>
+
+          <blockquote>
+            “삭제해야 하는 것은 실제 데이터가 아니라 C드라이브에 남아 있는 연결 폴더입니다. 이 구분이 복구의 핵심입니다.”
+          </blockquote>
+        </section>
+
+        <section id="implications">
+          <h2>실무적 시사점</h2>
+          <p>심볼릭 링크 기반 이동은 저장 공간 관리에서 꽤 강력한 선택지입니다. 특히 대용량 게임, 영상 편집 도구, 개발 SDK처럼 재설치 비용이 큰 프로그램에 유용합니다. 다만 이 방식은 저장 위치를 바꾸는 것이지 프로그램 구조를 공식적으로 재설치하는 것은 아닙니다.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>적합한 경우</th>
+                <th>신중해야 하는 경우</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>대용량 프로그램 폴더가 C드라이브를 압박하는 경우</td>
+                <td>백신, 드라이버, 시스템 서비스처럼 OS와 깊게 결합된 프로그램</td>
+              </tr>
+              <tr>
+                <td>재설치 시간이 오래 걸리거나 설정 복원이 번거로운 경우</td>
+                <td>외장 드라이브처럼 연결이 자주 끊기는 저장소를 대상 위치로 쓰는 경우</td>
+              </tr>
+              <tr>
+                <td>보조 SSD처럼 빠르고 안정적인 드라이브가 있는 경우</td>
+                <td>회사 보안 정책이나 관리 도구가 설치 경로 변경을 제한하는 환경</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="note">
+            <strong>권장 운영 방식.</strong> 처음에는 중요도가 낮은 프로그램 하나로 테스트하고, 검증 절차가 익숙해진 뒤 대용량 프로그램에 적용하는 편이 안전합니다. 이동 전에는 중요한 설정과 작업 파일을 별도로 백업해 두는 것이 좋습니다.
+          </div>
+        </section>
+
+        <section id="sources">
+          <h2>출처와 참고</h2>
+          <p class="source-list">이 문서는 제공된 Obsidian Markdown 노트를 바탕으로 공개용 리서치 리포트 형식에 맞게 재구성했습니다. 원문 출처는 IT맛집의 “설치된 프로그램 다른 드라이브로 옮기기! 재설치 없이 1분 만에 C드라이브 용량 확보”이며, 원문 발행일은 2026년 4월 8일입니다.</p>
+
+          <ul class="source-list">
+            <li>원문 출처: <a>IT맛집 원문</a></li>
+            <li>도구 참고: <a>FolderMove 공식 홈페이지</a></li>
+            <li>관련 주제: Windows 심볼릭 링크, 프로그램 폴더 이동, 저장 공간 관리</li>
+          </ul>
+        </section>
+
+        <section class="ending">
+          <h2>마무리</h2>
+          <p>C드라이브 용량 부족은 단순히 파일 몇 개를 지우는 방식으로는 반복되기 쉽습니다. 대용량 프로그램이 공간을 차지하고 있다면, FolderMove와 심볼릭 링크를 이용해 실제 데이터를 보조 드라이브로 옮기는 방법이 더 효과적일 수 있습니다.</p>
+          <p>핵심은 이동보다 검증입니다. 원본 경로, 대상 경로, 링크 상태, 프로그램 실행, 복구 가능성까지 확인하면 재설치 없이도 저장 공간을 안정적으로 확보할 수 있습니다. C드라이브가 빨간색 경고 막대를 보이기 시작했다면, 먼저 이동 가능한 대용량 프로그램부터 점검해 볼 만합니다.</p>
+        </section>
+
+        <footer>
+          <p>Standalone HTML research report. Sanitized mode 적용으로 JavaScript, iframe, 외부 CSS, 원격 이미지는 사용하지 않았습니다.</p>
+        </footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
