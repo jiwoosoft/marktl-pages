@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  
+  
+  <title>Supertonic 3 리서치 리포트: 온디바이스 TTS가 클라우드 음성 합성의 기본값을 흔드는 이유</title>
+  
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6f7a;
+      --soft: #f5f7f4;
+      --paper: #fffdf8;
+      --line: #dfe6dc;
+      --accent: #0f766e;
+      --accent-2: #9a3412;
+      --accent-3: #27374d;
+      --code: #243447;
+      --chip: #e9f5f2;
+      --shadow: 0 22px 60px rgba(25, 38, 52, .10);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-serif, "Noto Serif KR", "Apple SD Gothic Neo", "Malgun Gothic", Georgia, serif;
+      line-height: 1.75;
+      background:
+        linear-gradient(90deg, rgba(15, 118, 110, .06), transparent 36%, rgba(154, 52, 18, .05)),
+        var(--paper);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: end;
+      padding: 72px 0 44px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-flex;
+      width: fit-content;
+      gap: 8px;
+      align-items: center;
+      padding: 5px 10px;
+      border: 1px solid rgba(15, 118, 110, .24);
+      border-radius: 999px;
+      background: var(--chip);
+      color: #0b5c55;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 24px 0 18px;
+      font-size: clamp(2.45rem, 6vw, 5.9rem);
+      line-height: 1.03;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .dek {
+      max-width: 800px;
+      color: #344551;
+      font-size: clamp(1.08rem, 2vw, 1.42rem);
+      line-height: 1.7;
+      margin: 0 0 28px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.45fr .8fr;
+      gap: 38px;
+      align-items: end;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 26px 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .meta li {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+    }
+
+    .share-card {
+      background: rgba(255, 255, 255, .7);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .share-card h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: .02em;
+    }
+
+    .share-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.65;
+    }
+
+    .copy-block {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 6px;
+      background: #f0f4f1;
+      border: 1px dashed #b9c8bc;
+      color: #263840;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: .91rem;
+      line-height: 1.55;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 54px;
+      padding: 44px 0 80px;
+    }
+
+    nav.toc {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, .86);
+    }
+
+    .toc strong {
+      display: block;
+      margin-bottom: 10px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: .86rem;
+      letter-spacing: .08em;
+      color: var(--accent-3);
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: block;
+      padding: 7px 0;
+      color: #40505b;
+      text-decoration: none;
+      font-size: .94rem;
+      border-top: 1px solid rgba(223, 230, 220, .68);
+    }
+
+    article {
+      min-width: 0;
+    }
+
+    section {
+      margin: 0 0 72px;
+      scroll-margin-top: 26px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.75rem, 3.3vw, 3rem);
+      line-height: 1.18;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    h3 {
+      margin: 34px 0 12px;
+      font-size: 1.32rem;
+      line-height: 1.35;
+      color: #1f3440;
+    }
+
+    p {
+      margin: 0 0 18px;
+      font-size: 1.04rem;
+    }
+
+    .abstract {
+      padding: 28px;
+      border-radius: var(--radius);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .abstract p:last-child {
+      margin-bottom: 0;
+    }
+
+    .lead-label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--accent-2);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .finding-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .finding {
+      padding: 18px;
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .finding b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 1.6rem;
+      line-height: 1;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .finding span {
+      color: var(--muted);
+      font-size: .94rem;
+      line-height: 1.55;
+    }
+
+    blockquote {
+      margin: 34px 0;
+      padding: 2px 0 2px 26px;
+      border-left: 5px solid var(--accent);
+      color: #243541;
+      font-size: clamp(1.28rem, 2.3vw, 1.85rem);
+      line-height: 1.55;
+      font-weight: 700;
+      text-wrap: balance;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .78);
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: .97rem;
+      margin-bottom: 0;
+    }
+
+    .diagram {
+      margin: 28px 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8faf7;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 14px;
+    }
+
+    .flow div {
+      min-height: 96px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 12px;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #d9e2d8;
+      color: #283b45;
+      font-weight: 700;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: .92rem;
+    }
+
+    .flow div:not(:last-child)::after {
+      content: "→";
+      color: var(--accent);
+      margin-left: 6px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 22px 0 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: .92rem;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e7ece5;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef5ef;
+      color: #243541;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      padding: 17px 18px;
+      border-radius: var(--radius);
+      border: 1px solid #ead8c8;
+      background: #fff8ef;
+      color: #68421f;
+      font-size: .98rem;
+    }
+
+    .code {
+      overflow-x: auto;
+      margin: 18px 0 28px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background: var(--code);
+      color: #eef5f7;
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 20px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      margin-right: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .source-list {
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .source-list li {
+      margin-bottom: 10px;
+    }
+
+    .ending {
+      padding: 34px;
+      border-radius: var(--radius);
+      background: #20313b;
+      color: #f8fbf7;
+    }
+
+    .ending h2 {
+      color: #fff;
+    }
+
+    .ending p {
+      color: #dbe6df;
+    }
+
+    .ending a {
+      color: #91e8dc;
+    }
+
+    footer {
+      padding: 30px 0 56px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    @media (max-width: 940px) {
+      .hero-grid,
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      nav.toc {
+        position: static;
+      }
+
+      .finding-grid,
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .flow div:not(:last-child)::after {
+        content: "";
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding: 0 16px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 44px;
+      }
+
+      .finding-grid,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .abstract,
+      .ending {
+        padding: 22px;
+      }
+
+      th, td {
+        padding: 10px 11px;
+      }
+    }
+  </style>
+<meta property="og:type" content="article">
+<meta property="og:title" content="First run downloads the model from Hugging Face automatically.">
+<meta property="og:description" content="title: &quot;supertoneinc/supertonic: LightningFast, OnDevice, Multilingual TTS — running natively via ONNX.&quot; source: &quot;https://github.com/supertoneinc/supertonic&quot; author: published: cre">
+<meta property="og:url" content="https://jiwoosoft.github.io/marktl-pages/marktl/s/gl3use/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="First run downloads the model from Hugging Face automatically.">
+<meta name="twitter:description" content="title: &quot;supertoneinc/supertonic: LightningFast, OnDevice, Multilingual TTS — running natively via ONNX.&quot; source: &quot;https://github.com/supertoneinc/supertonic&quot; author: published: cre">
+<link rel="canonical" href="https://jiwoosoft.github.io/marktl-pages/marktl/s/gl3use/">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="kicker">Research Report · Editorial Brief</span>
+          <h1>Supertonic 3는 온디바이스 TTS의 무게중심을 어디까지 옮길 수 있을까.</h1>
+          <p class="dek">99M 파라미터, 31개 언어, ONNX 기반 로컬 추론, 44.1kHz 출력. Supertonic 3는 “클라우드 호출 없이도 실용적인 다국어 음성 합성이 가능한가”라는 질문에 제품 수준의 답을 제시한다.</p>
+          <ul class="meta" aria-label="문서 메타데이터">
+            <li>작성 기준일 2026년 5월 17일.</li>
+            <li>원문 출처 supertone-inc/supertonic GitHub 저장소.</li>
+            <li>형식 공개용 리서치 리포트.</li>
+          </ul>
+        </div>
+        <aside class="share-card" aria-label="공유용 요약">
+          <h2>공유용 한 줄 요약</h2>
+          <p>Supertonic 3는 31개 언어를 지원하는 99M 파라미터 온디바이스 TTS로, 브라우저와 엣지 기기까지 겨냥한 공개 ONNX 음성 합성 모델이다.</p>
+          <div class="copy-block">온디바이스 AI 음성 합성의 다음 기준은 더 큰 모델이 아니라 더 작고 빠르며 배포 가능한 모델일 수 있다.</div>
+        </aside>
+      </div>
+    </header>
+
+    <main>
+      <nav class="toc" aria-label="목차">
+        <strong>목차</strong>
+        <a href="#abstract">초록</a>
+        <a href="#findings">핵심 발견</a>
+        <a href="#why">왜 중요한가</a>
+        <a href="#evidence">성능 근거</a>
+        <a href="#deployment">배포와 런타임</a>
+        <a href="#normalization">자연어 처리</a>
+        <a href="#ecosystem">생태계</a>
+        <a href="#limits">주의점</a>
+        <a href="#implications">시사점</a>
+        <a href="#sources">출처 노트</a>
+      </nav>
+
+      <article>
+        <section id="abstract">
+          <div class="abstract">
+            <span class="lead-label">Abstract</span>
+            <p>Supertonic은 Supertone Inc.가 공개한 초고속 온디바이스 다국어 TTS 시스템이다. 핵심 주장은 명확하다. 텍스트 음성 변환을 클라우드 API에 의존하지 않고, 데스크톱, 모바일, 브라우저, 라즈베리 파이, 전자책 단말기 같은 제한된 환경에서도 실행할 수 있다는 것이다.</p>
+            <p>이 리포트는 GitHub 저장소에 공개된 제품 설명, 성능 표, SDK 지원 범위, 모델 버전 정보를 바탕으로 Supertonic 3의 의미를 정리한다. 결론적으로 Supertonic 3의 강점은 단일 지표의 압도적 우위라기보다, “충분한 품질”, “작은 모델”, “다국어”, “로컬 배포”, “여러 런타임 예제”를 한 번에 묶은 실행 가능성에 있다.</p>
+          </div>
+        </section>
+
+        <section id="findings">
+          <h2>핵심 발견.</h2>
+          <div class="finding-grid">
+            <div class="finding">
+              <b>31</b>
+              <span>Supertonic 3가 지원하는 언어 수. v2의 5개 언어에서 크게 확장됐다.</span>
+            </div>
+            <div class="finding">
+              <b>99M</b>
+              <span>공개 ONNX 자산 기준 모델 파라미터 규모. 0.7B~2B급 공개 TTS 모델보다 작다.</span>
+            </div>
+            <div class="finding">
+              <b>44.1kHz</b>
+              <span>외부 업샘플러 없이 출력하는 16비트 WAV 오디오 품질.</span>
+            </div>
+            <div class="finding">
+              <b>ONNX</b>
+              <span>Python, Node.js, WebGPU, Java, C++, C#, Go, Swift, iOS, Rust, Flutter 예제를 관통하는 배포 기반.</span>
+            </div>
+          </div>
+
+          <blockquote>Supertonic 3의 전략은 “가장 큰 음성 모델”이 아니라 “가장 쉽게 제품 안에 넣을 수 있는 음성 모델”에 가깝다.</blockquote>
+
+          <ul class="checklist">
+            <li>클라우드 호출 없이 개인정보 보호와 지연 시간 문제를 동시에 줄인다.</li>
+            <li>브라우저와 엣지 디바이스를 포함해 배포 가능한 표면적을 넓힌다.</li>
+            <li>표현 태그와 자연어 정규화로 실제 문장 읽기 문제를 직접 겨냥한다.</li>
+            <li>오픈 웨이트와 공개 예제로 실험에서 제품 통합까지의 간격을 줄인다.</li>
+          </ul>
+        </section>
+
+        <section id="why">
+          <h2>왜 중요한가.</h2>
+          <p>TTS는 오랫동안 클라우드 API와 대형 모델 중심으로 발전해 왔다. 품질을 높이기 쉬운 대신, 네트워크 지연, 비용, 개인정보, 오프라인 사용성, 플랫폼 종속성이라는 비용을 감수해야 했다. Supertonic 3는 이 균형점을 다시 묻는다.</p>
+          <p>저장소 설명에 따르면 이 모델은 웹페이지 전체를 1초 이내에 오디오로 변환할 수 있을 만큼 빠른 저지연 합성을 목표로 한다. 또한 입력 언어를 모를 때 `lang="na"`로 언어 비의존 처리를 요청할 수 있고, GPU 없이 CPU 기반 로컬 추론을 전제로 한다.</p>
+
+          <div class="diagram" role="img" aria-label="Supertonic의 온디바이스 TTS 처리 흐름">
+            <strong>온디바이스 TTS 처리 흐름.</strong>
+            <div class="flow">
+              <div>텍스트 입력</div>
+              <div>언어 지정 또는 na</div>
+              <div>ONNX 로컬 추론</div>
+              <div>음성 스타일 적용</div>
+              <div>44.1kHz WAV 출력</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="evidence">
+          <h2>성능 근거.</h2>
+          <p>Supertonic 3는 Minimax-MLS-test 벤치마크에서 읽기 정확도를 제시한다. 별표가 붙은 언어는 CER, 나머지는 WER을 사용한다. 값은 낮을수록 좋으며, 공개 표에 따르면 Supertonic 3는 일부 언어에서 최고는 아니지만 더 큰 모델군과 비교 가능한 범위를 유지한다.</p>
+
+          <h3>언어별 읽기 정확도 표본.</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>언어</th>
+                  <th>VoxCPM2</th>
+                  <th>OmniVoice</th>
+                  <th>Qwen3-TTS</th>
+                  <th>Supertonic 2</th>
+                  <th>Supertonic 3</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>영어</td><td>2.11</td><td>2.02</td><td>2.25</td><td>2.52</td><td><strong>2.06</strong></td></tr>
+                <tr><td>독일어</td><td>0.85</td><td>0.96</td><td>0.52</td><td>—</td><td><strong>0.86</strong></td></tr>
+                <tr><td>한국어 CER</td><td>4.70</td><td>3.22</td><td>4.07</td><td>3.65</td><td><strong>3.26</strong></td></tr>
+                <tr><td>스페인어</td><td>1.34</td><td>0.99</td><td>0.75</td><td>1.81</td><td><strong>1.13</strong></td></tr>
+                <tr><td>루마니아어</td><td>22.39</td><td>2.29</td><td>—</td><td>—</td><td><strong>2.19</strong></td></tr>
+                <tr><td>우크라이나어</td><td>5.85</td><td>0.71</td><td>—</td><td>—</td><td><strong>1.23</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>v2에서 v3로 넘어오며 반복 및 건너뛰기 오류 감소, 공유 언어 집합에서의 화자 유사성 개선, 지원 언어 수 확대가 강조된다. 또한 v2와 호환되는 ONNX 공용 인터페이스를 유지해 기존 통합의 마이그레이션 부담을 줄이는 설계가 눈에 띈다.</p>
+
+          <h3>모델 버전 비교.</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>Supertonic 3</th>
+                  <th>Supertonic 2</th>
+                  <th>Supertonic 1</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>상태</td><td>최신</td><td>안정</td><td>레거시</td></tr>
+                <tr><td>파라미터</td><td>약 9,900만</td><td>약 6,600만</td><td>약 6,600만</td></tr>
+                <tr><td>지원 언어</td><td>31개</td><td>5개</td><td>영어 1개</td></tr>
+                <tr><td>표현 태그</td><td>10개</td><td>미공개</td><td>미공개</td></tr>
+                <tr><td>가중치</td><td>Hugging Face 공개</td><td>Hugging Face 공개</td><td>Hugging Face 공개</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="deployment">
+          <h2>배포와 런타임.</h2>
+          <p>Supertonic의 제품적 매력은 지원 런타임의 폭에서 나온다. Python SDK로 빠르게 시작할 수 있고, ONNX 런타임을 바탕으로 서버, 브라우저, 네이티브 앱, 모바일 앱까지 이어진다.</p>
+
+          <div class="cards">
+            <div class="card">
+              <h3>브라우저와 WebGPU.</h3>
+              <p>onnxruntime-web 기반 클라이언트 추론을 통해 네트워크 호출 없는 웹 TTS 경험을 겨냥한다.</p>
+            </div>
+            <div class="card">
+              <h3>엣지 디바이스.</h3>
+              <p>라즈베리 파이와 전자책 리더기 같은 제한된 하드웨어에서도 실행 가능하다는 점을 전면에 내세운다.</p>
+            </div>
+            <div class="card">
+              <h3>멀티 언어 SDK.</h3>
+              <p>Python, Node.js, Java, C++, C#, Go, Swift, iOS, Rust, Flutter 예제가 공개되어 있다.</p>
+            </div>
+          </div>
+
+          <h3>Python 빠른 시작.</h3>
+          <pre class="code"><code>pip install supertonic
+
+from supertonic import TTS
+
+tts = TTS(auto_download=True)
+
+wav, duration = tts.synthesize(
+    text="Supertonic is a lightning fast, on-device TTS system.",
+    lang="en",
+    voice_style=style,
+    total_steps=8,
+    speed=1.05,
+)
+
+tts.save_audio(wav, "output.wav")</code></pre>
+
+          <div class="note">운영 환경에서는 모델 에셋 다운로드, Git LFS, ONNX 런타임 C 라이브러리, JDK, .NET 런타임 등 플랫폼별 전제 조건을 미리 고정하는 것이 중요하다.</div>
+        </section>
+
+        <section id="normalization">
+          <h2>자연어 텍스트 처리.</h2>
+          <p>저장소는 Supertonic이 자연스러운 산문, 구두점, 약어, 고유 명사, 단위, 통화, 전화번호 같은 실제 입력을 처리하도록 설계됐다고 설명한다. 이는 TTS 품질을 단순히 음색의 자연스러움으로만 보지 않는다는 뜻이다. 제품에서는 “무엇을 어떻게 읽는가”가 사용자 신뢰를 좌우한다.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>범주</th>
+                  <th>읽기 난점</th>
+                  <th>Supertonic 주장</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>금융 표현</td>
+                  <td>5.2M, $450K, 통화 기호와 규모 단위.</td>
+                  <td>사전 처리 없이 올바른 통화 및 수량 발음을 목표로 한다.</td>
+                </tr>
+                <tr>
+                  <td>전화번호</td>
+                  <td>지역번호, 하이픈, ext., 내선 번호.</td>
+                  <td>숫자를 문맥에 맞게 분리해 읽는 처리를 강조한다.</td>
+                </tr>
+                <tr>
+                  <td>기술 단위</td>
+                  <td>2.3h, 30kph 같은 약식 단위.</td>
+                  <td>공학 및 제품 설명에서 요구되는 단위 발음을 다룬다.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <blockquote>음성 합성의 실전 품질은 목소리의 매끄러움만이 아니라 숫자, 단위, 약어를 틀리지 않는 능력에서 드러난다.</blockquote>
+        </section>
+
+        <section id="ecosystem">
+          <h2>생태계와 사용 사례.</h2>
+          <p>Supertonic으로 제작됐거나 연동된 프로젝트 목록은 이 모델이 단순 연구 공개물보다 배포 지향 자산에 가깝다는 점을 보여준다. 웹페이지 읽기 확장 프로그램, iOS 전자책 리더, 브라우저 음성 챗봇, Kotlin 멀티플랫폼 SDK, MNN 기반 경량 라이브러리, Transformers.js 지원 등이 언급되어 있다.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>프로젝트</th>
+                  <th>의미</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>TLDRL</td><td>웹페이지를 읽어주는 무료 온디바이스 TTS 확장 프로그램.</td></tr>
+                <tr><td>Read Aloud</td><td>오픈소스 TTS 브라우저 확장 프로그램과의 접점.</td></tr>
+                <tr><td>PageEcho</td><td>iOS 전자책 리더에서의 로컬 음성 합성 사용 사례.</td></tr>
+                <tr><td>Voice Chat</td><td>브라우저 기반 음성 대 음성 LLM 챗봇.</td></tr>
+                <tr><td>Transformers.js</td><td>웹 ML 생태계와의 연결 가능성.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="limits">
+          <h2>주의해서 읽어야 할 지점.</h2>
+          <p>이 리포트는 원 저장소에 공개된 설명과 표를 바탕으로 한다. 따라서 Supertonic 3의 독립 재현 평가, 실제 기기별 지연 시간, 장문 안정성, 한국어 문장 처리의 세부 오류 유형, 상업 환경에서의 라이선스 검토는 별도로 확인해야 한다.</p>
+          <ul class="checklist">
+            <li>성능 수치는 벤치마크와 측정 조건에 의존한다.</li>
+            <li>WER과 CER이 낮아도 음색 선호도, 감정 표현, 장문 내구성은 별도 평가가 필요하다.</li>
+            <li>OpenRAIL-M 모델 라이선스는 사용 목적과 배포 방식에 맞춰 검토해야 한다.</li>
+            <li>브라우저, 모바일, 엣지 배포는 런타임 크기와 초기 로딩 경험까지 함께 봐야 한다.</li>
+          </ul>
+        </section>
+
+        <section id="implications">
+          <div class="ending">
+            <h2>시사점.</h2>
+            <p>Supertonic 3가 던지는 메시지는 단순하다. 음성 합성은 더 이상 서버의 전유물이 아니다. 충분히 작은 모델, 표준화된 ONNX 배포, 폭넓은 런타임 예제, 다국어 지원이 결합되면 TTS는 브라우저 확장, 전자책 단말기, 모바일 앱, 로컬 생산성 도구 안으로 직접 들어갈 수 있다.</p>
+            <p>앞으로의 경쟁은 “누가 가장 인간 같은 목소리를 내는가”만이 아니라 “누가 가장 적은 의존성으로, 가장 많은 환경에서, 가장 안정적으로 읽어주는가”로 확장될 가능성이 크다. Supertonic 3는 그 변화의 꽤 구체적인 사례다.</p>
+            <p><a>원본 GitHub 저장소 보기</a> · <a>Hugging Face 모델 보기</a> · <a>인터랙티브 데모 보기</a></p>
+          </div>
+        </section>
+
+        <section id="sources">
+          <h2>출처 노트.</h2>
+          <ol class="source-list">
+            <li>주요 내용은 <a>supertone-inc/supertonic GitHub 저장소</a>의 README 내용을 바탕으로 재구성했다.</li>
+            <li>모델 에셋 및 데모 정보는 <a>Supertone/supertonic-3 Hugging Face 모델 페이지</a>와 <a>Hugging Face Space 데모</a>를 출처로 한다.</li>
+            <li>논문 인용 항목은 SupertonicTTS, Length-Aware Rotary Position Embedding, Self-Purification Flow Matching 관련 arXiv 항목으로 저장소에 제시된 BibTeX를 요약했다.</li>
+            <li>원문에 포함된 원격 이미지와 비디오 임베드는 보안 요구사항에 따라 이 standalone HTML에서 제외하고, CSS 기반 다이어그램과 표로 대체했다.</li>
+          </ol>
+        </section>
+      </article>
+    </main>
+
+    <footer>
+      <p>Copyright © 2026 Supertone Inc. 원문 저장소의 샘플 코드는 MIT 라이선스, 첨부 모델은 OpenRAIL-M 라이선스 고지를 따른다. 이 문서는 공개 노트 변환 목적의 편집 리포트다.</p>
+    </footer>
+  </div>
+</body>
+</html>
